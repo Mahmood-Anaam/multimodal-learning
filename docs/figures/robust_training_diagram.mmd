@@ -1,0 +1,33 @@
+---
+config:
+  theme: redux
+---
+
+flowchart TB
+    subgraph Training
+        D[(Training Dataset)]:::data
+
+        %% Encoding & Projection
+        D --> E[Encode & Project Image to Feature]:::proc
+        D --> F[Encode & Project Text to Feature]:::proc
+
+        %% Random Dropout Decision
+        E --> G{Apply Random Dropout?}:::decision
+        F --> G
+        G -->|Yes| H[Zero Out Selected Image/Text Features]:::action
+        G -->|No| I[Keep Both Feature Vectors]:::action
+
+        %% Fusion & Classification
+        H --> J[Concatenate Feature Vectors]:::proc
+        I --> J
+        J --> K[Linear Classifier → Logits]:::proc
+
+        %% Loss Computation & Weight Update
+        K --> L[Compute Loss & Backpropagate]:::output
+    end
+
+    classDef data fill:#e0f7fa,stroke:#006064,stroke-width:1.5px;
+    classDef proc fill:#ede7f6,stroke:#4527a0,stroke-width:1.5px;
+    classDef decision fill:#fff3e0,stroke:#ff6f00,stroke-width:1.5px;
+    classDef action fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px;
+    classDef output fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px;

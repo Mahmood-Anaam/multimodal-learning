@@ -1,0 +1,33 @@
+---
+config:
+  theme: redux
+---
+
+flowchart TB
+    subgraph Inference
+        A[(Inference Data)]:::data
+
+        %% Image branch
+        A --> B{Image Available?}:::decision
+        B -->|Yes| C[Encode & Project Image to Feature]:::proc
+        B -->|No| D[Use Zero Vector for Image Feature]:::proc
+
+        %% Text branch
+        C --> E{Text Available?}:::decision
+        D --> E
+        E -->|Yes| F[Encode & Project Text to Feature]:::proc
+        E -->|No| G[Use Zero Vector for Text Feature]:::proc
+
+        %% Fusion & Classification
+        C --> H[Concatenate Feature Vectors]:::proc
+        D --> H
+        F --> H
+        G --> H
+        H --> I[Linear Classifier → Logits]:::proc
+        I --> J[Output Prediction]:::output
+    end
+
+    classDef data fill:#e0f7fa,stroke:#006064,stroke-width:1.5px;
+    classDef decision fill:#fff3e0,stroke:#ff6f00,stroke-width:1.5px;
+    classDef proc fill:#ede7f6,stroke:#4527a0,stroke-width:1.5px;
+    classDef output fill:#fff8e1,stroke:#f9a825,stroke-width:1.5px;
